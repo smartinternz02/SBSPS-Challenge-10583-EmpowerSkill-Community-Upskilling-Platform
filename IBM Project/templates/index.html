@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+         body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .colored-box {
+            background-color: #87CEEB;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .colored-box p {
+            margin: 0;
+            color: #fff;
+        }
+
+        .drop-zone {
+            border: 4px dashed #333;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .drop-zone.active {
+            border-color: #87CEEB;
+        }
+
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        #keywords {
+            border: 2px solid #333;
+            border-radius: 5px;
+            padding: 8px;
+            transition: border-color 0.3s;
+        }
+
+        #keywords:focus {
+            border-color: #87CEEB;
+        }
+
+        button.btn-primary {
+            background-color: #87CEEB;
+            border: none;
+            transition: background-color 0.3s;
+        }
+
+        button.btn-primary:hover {
+            background-color: #66b3e3;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand mx-auto">TEAM CATALYSTS</a>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="mb-4"></h1>
+        <div class="colored-box">
+            <p></p>
+        </div>
+        <form action="/" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="pdf_files">Drag and Drop PDF Files </label>
+                <div class="drop-zone" id="drop-zone">
+                    <div class="drop-zone-text">
+                        <p>Drag and drop PDF files here</p>
+                        <p>or</p>
+                        <p>Click to select files</p>
+                    </div>
+                    <ul class="file-list" id="file-list"></ul>
+                </div>
+                <input type="file" name="pdf_files" id="pdf_files" accept=".pdf,.docx,.doc" multiple style="display: none;">
+            </div>            
+            <div class="form-group">
+                <label for="keywords">Enter Keywords (Comma Separated)</label>
+                <input type="text" class="form-control" name="keywords" id="keywords" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Check</button>
+        </form>
+    </div>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('pdf_files');
+        const fileList = document.getElementById('file-list');
+    
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('active');
+        });
+    
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('active');
+        });
+    
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('active');
+    
+            const files = e.dataTransfer.files;
+            fileInput.files = files;
+            updateFileList(files);
+        });
+    
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+    
+        fileInput.addEventListener('change', () => {
+            const files = fileInput.files;
+            updateFileList(files);
+        });
+    
+        function updateFileList(files) {
+            fileList.innerHTML = '';
+            for (const file of files) {
+                const listItem = document.createElement('li');
+                listItem.textContent = file.name;
+                fileList.appendChild(listItem);
+            }
+        }
+        fileInput.addEventListener('change', () => {
+            const files = fileInput.files;
+            for (const file of files) {
+                const fileType = file.type;
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+
+                if (!allowedTypes.includes(fileType)) {
+                    alert('Only PDF and Word files are allowed.');
+                    fileInput.value = ''; // Clear the input
+                    return;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

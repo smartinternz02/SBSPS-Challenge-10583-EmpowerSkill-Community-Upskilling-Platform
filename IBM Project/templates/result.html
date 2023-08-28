@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validate Result</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+        .container {
+            margin-top: 40px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .thumbnail-catalog {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .thumbnail {
+            text-align: center;
+        }
+        .thumbnail img {
+            max-width: 100px;
+            height: auto;
+        }
+        .result-table {
+            margin-top: 30px;
+        }
+        .gif-bottom-left {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+    }
+
+    /* Position the GIF in the bottom right corner */
+    .gif-bottom-right {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+    }
+    .keyword-found {
+            color: green; /* Change the color as desired */
+            font-weight: bold; /* Add other styles as needed */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Congratulations🎉</h1>
+        
+        <h2>PDF Files with Keyword</h2>
+        <div class="thumbnail-catalog">
+            {% for result in results %}
+            <div class="thumbnail">
+                <img src="/static/images/pdflogo.jpg" alt="{{ result.filename }}" class="img-fluid rounded-circle">
+                <p class="mt-2">{{ result.filename }}</p>
+                {% if result.keyword_presence %}
+                <p class="keyword-found">Keywords Found: {{ result.found_keywords|join(', ') }}</p>
+            {% else %}
+                <p>Keywords Not Found</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        </div>
+        
+        <h2 class="mt-5">All Selected PDF</h2>
+        <table class="table result-table">
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Word Count</th>
+                    <th>Keyword Presence</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <td>{{ result.filename }}</td>
+                    <td>{{ result.word_count }}</td>
+                    <td>{{ "Yes" if result.keyword_presence else "No" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <img src="{{ url_for('static', filename='images/pop.gif') }}" alt="Pop GIF" class="gif-bottom-left" style="width: 110px; height: auto;">
+<img src="{{ url_for('static', filename='images/pop.gif') }}" alt="Pop GIF" class="gif-bottom-right" style="width: 110px; height: auto;">
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Wait for the page to load
+        window.addEventListener('load', function() {
+            // Get the GIF elements
+            var gifElements = document.querySelectorAll('.gif-bottom-left, .gif-bottom-right');
+    
+            // Hide the GIFs once they have loaded
+            gifElements.forEach(function(gif) {
+                gif.addEventListener('load', function() {
+                    gif.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
